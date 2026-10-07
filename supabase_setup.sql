@@ -19,6 +19,12 @@ create table if not exists public.readings (
   b integer not null,
   w integer not null,
   lux double precision not null,
+  detected_device text,
+  detection_confidence real,
+  raw_device text,
+  raw_confidence real,
+  detection_age_s real,
+  inference_ms integer,
   unique (session_id, elapsed_s)
 );
 
@@ -38,3 +44,5 @@ alter table public.detections enable row level security;
 
 grant select, insert, update, delete on public.sessions, public.readings, public.detections to service_role;
 grant usage, select on all sequences in schema public to service_role;
+
+notify pgrst, 'reload schema';
