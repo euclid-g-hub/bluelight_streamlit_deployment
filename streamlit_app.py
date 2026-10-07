@@ -90,12 +90,12 @@ def fetch_readings(session_id):
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
-def finished_readings(session_id):
+def finished_readings(session_id, version=2):
     return fetch_readings(session_id)
 
 
 @st.cache_data(ttl=2, show_spinner=False)
-def live_readings(session_id):
+def live_readings(session_id, version=2):
     return fetch_readings(session_id)
 
 
@@ -171,6 +171,9 @@ def kde_figure(d, title):
 
 def prepare(df, info, sid):
     df = df.copy()
+    for c in READING_COLUMNS:
+        if c not in df.columns:
+            df[c] = None
     df["session"] = sid
     df["participant"] = info.participant
     df["label"] = info.device
